@@ -3,19 +3,16 @@ package repository
 import (
 	"context"
 
-	"github.com/Svaratharajan-svs/linkr/backend/models"
 	"github.com/Svaratharajan-svs/linkr/backend/dto"
+	"github.com/Svaratharajan-svs/linkr/backend/models"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"time"
 )
 
 type PostgresLinkRepository struct {
-
 	db *pgxpool.Pool
-
 }
-
 
 func NewPostgresLinkRepository(
 
@@ -26,7 +23,6 @@ func NewPostgresLinkRepository(
 	return &PostgresLinkRepository{
 
 		db: db,
-
 	}
 
 }

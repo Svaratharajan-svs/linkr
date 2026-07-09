@@ -1,4 +1,5 @@
 package worker
+
 import (
 	"context"
 	"log"
@@ -7,11 +8,8 @@ import (
 )
 
 type ClickEvent struct {
-
 	LinkID string
-
 }
-
 
 var ClickChannel = make(
 	chan ClickEvent,
@@ -22,19 +20,15 @@ func StartClickWorker(
 	repo repository.LinkRepository,
 ) {
 
-
-	go func(){
-
+	go func() {
 
 		for event := range ClickChannel {
-
 
 			err :=
 				repo.IncrementClick(
 					context.Background(),
 					event.LinkID,
 				)
-
 
 			if err != nil {
 
@@ -47,8 +41,6 @@ func StartClickWorker(
 
 		}
 
-
 	}()
-
 
 }

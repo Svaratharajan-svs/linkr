@@ -2,9 +2,7 @@ package models
 
 import "time"
 
-
 type Link struct {
-
 	ID string `json:"id"`
 
 	Code string `json:"code"`
@@ -16,5 +14,4 @@ type Link struct {
 	CreatedBy string `json:"created_by"`
 
 	CreatedAt time.Time `json:"created_at"`
-
 }

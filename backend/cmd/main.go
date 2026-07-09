@@ -16,8 +16,8 @@ import (
 	"github.com/Svaratharajan-svs/linkr/backend/db"
 	"github.com/Svaratharajan-svs/linkr/backend/handlers"
 	"github.com/Svaratharajan-svs/linkr/backend/middleware"
-	"github.com/Svaratharajan-svs/linkr/backend/routes"
 	"github.com/Svaratharajan-svs/linkr/backend/repository"
+	"github.com/Svaratharajan-svs/linkr/backend/routes"
 	"github.com/Svaratharajan-svs/linkr/backend/service"
 	"github.com/Svaratharajan-svs/linkr/backend/worker"
 )
@@ -27,25 +27,24 @@ func main() {
 	// Load environment variables
 	cfg := config.Load()
 
-
 	// Connect PostgreSQL
 	dbPool := db.New(cfg.DatabaseURL)
 
 	defer dbPool.Close()
 
-linkRepository :=
-	repository.NewPostgresLinkRepository(
-		dbPool,
-	)
-worker.StartClickWorker(
-	linkRepository,
-)
-
-linkService :=
-	service.NewLinkService(
+	linkRepository :=
+		repository.NewPostgresLinkRepository(
+			dbPool,
+		)
+	worker.StartClickWorker(
 		linkRepository,
-		cfg,
 	)
+
+	linkService :=
+		service.NewLinkService(
+			linkRepository,
+			cfg,
+		)
 
 	// Load Cognito JWKS
 	jwks, err := auth.LoadJWKS(
@@ -60,7 +59,6 @@ linkService :=
 		)
 	}
 
-
 	// Create Gin router
 	router := gin.Default()
 
@@ -68,19 +66,19 @@ linkService :=
 	healthHandler :=
 		handlers.NewHealthHandler(dbPool)
 
-	// Link handler
-		linkHandler :=
-	handlers.NewLinkHandler(
-		linkService,
-	)
+		// Link handler
+	linkHandler :=
+		handlers.NewLinkHandler(
+			linkService,
+		)
 
 	/*
-	    Public Routes
+	   Public Routes
 
-	    No JWT required
+	   No JWT required
 
-	    Example:
-	    GET /abc123
+	   Example:
+	   GET /abc123
 	*/
 
 	router.GET(
@@ -89,31 +87,26 @@ linkService :=
 	)
 
 	router.GET(
-	"/:code",
-	linkHandler.Redirect,
-)
-router.HEAD("/:code", linkHandler.Redirect)
-
+		"/:code",
+		linkHandler.Redirect,
+	)
+	router.HEAD("/:code", linkHandler.Redirect)
 
 	/*
-	    Protected API Routes
+	   Protected API Routes
 
-	    JWT required
+	   JWT required
 	*/
 	api := router.Group("/api")
-
 
 	api.Use(
 		middleware.AuthMiddleware(jwks),
 	)
 
-
 	routes.RegisterProtected(
 		api,
 		linkHandler,
 	)
-
-
 
 	// HTTP Server
 	server := &http.Server{
@@ -123,16 +116,13 @@ router.HEAD("/:code", linkHandler.Redirect)
 		Handler: router,
 	}
 
-
-
 	// Start server
-	go func(){
+	go func() {
 
 		log.Printf(
 			"Server running on port %s",
 			cfg.Port,
 		)
-
 
 		if err := server.ListenAndServe(); err != nil &&
 			err != http.ErrServerClosed {
@@ -143,8 +133,6 @@ router.HEAD("/:code", linkHandler.Redirect)
 
 	}()
 
-
-
 	// Graceful shutdown
 
 	stop := make(
@@ -152,24 +140,17 @@ router.HEAD("/:code", linkHandler.Redirect)
 		1,
 	)
 
-
 	signal.Notify(
 		stop,
 		os.Interrupt,
 		syscall.SIGTERM,
 	)
 
-
-
 	<-stop
-
-
 
 	log.Println(
 		"Shutting down server...",
 	)
-
-
 
 	ctx, cancel :=
 		context.WithTimeout(
@@ -177,10 +158,7 @@ router.HEAD("/:code", linkHandler.Redirect)
 			5*time.Second,
 		)
 
-
 	defer cancel()
-
-
 
 	if err := server.Shutdown(ctx); err != nil {
 
@@ -190,7 +168,6 @@ router.HEAD("/:code", linkHandler.Redirect)
 		)
 
 	}
-
 
 	log.Println(
 		"Server stopped",

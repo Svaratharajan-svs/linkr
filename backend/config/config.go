@@ -8,23 +8,23 @@ import (
 )
 
 type Config struct {
-	Port         string
-	DatabaseURL  string
-	CognitoPool  string
+	Port          string
+	DatabaseURL   string
+	CognitoPool   string
 	CognitoClient string
 	CognitoRegion string
-	BaseURL      string
+	BaseURL       string
 }
 
 func Load() *Config {
 	_ = godotenv.Load()
 
 	cfg := &Config{
-		Port:           getEnv("PORT", "8080"),
-		DatabaseURL:    getEnv("DATABASE_URL", ""),
-		CognitoPool:    getEnv("COGNITO_POOL_ID", ""),
-		CognitoClient:  getEnv("COGNITO_CLIENT_ID", ""),
-		CognitoRegion:  getEnv("COGNITO_REGION", ""),
+		Port:          getEnv("PORT", "8080"),
+		DatabaseURL:   getEnv("DATABASE_URL", ""),
+		CognitoPool:   getEnv("COGNITO_POOL_ID", ""),
+		CognitoClient: getEnv("COGNITO_CLIENT_ID", ""),
+		CognitoRegion: getEnv("COGNITO_REGION", ""),
 		BaseURL:       getEnv("BASE_URL", "http://localhost:8080"),
 	}
 

@@ -11,13 +11,9 @@ import (
 	"github.com/Svaratharajan-svs/linkr/backend/worker"
 )
 
-
 type LinkHandler struct {
-
 	service *service.LinkService
-
 }
-
 
 func NewLinkHandler(
 	service *service.LinkService,
@@ -28,35 +24,27 @@ func NewLinkHandler(
 	}
 }
 
-
 func (h *LinkHandler) CreateLink(
 	c *gin.Context,
 ) {
 
-
 	var req dto.CreateLinkRequest
 
-
 	if err := c.ShouldBindJSON(&req); err != nil {
-
 
 		c.JSON(
 			http.StatusBadRequest,
 			gin.H{
-				"error":"invalid request",
+				"error": "invalid request",
 			},
 		)
 
 		return
 	}
 
-
-
 	// Later this comes from Cognito JWT claims
 
 	userID := "admin"
-
-
 
 	response, err :=
 		h.service.CreateLink(
@@ -65,21 +53,17 @@ func (h *LinkHandler) CreateLink(
 			userID,
 		)
 
-
 	if err != nil {
-
 
 		c.JSON(
 			http.StatusBadRequest,
-			gin.H{
-				"error":err.Error(),
+			dto.ErrorResponse{
+				Error: err.Error(),
 			},
 		)
 
 		return
 	}
-
-
 
 	c.JSON(
 		http.StatusCreated,
@@ -90,7 +74,7 @@ func (h *LinkHandler) CreateLink(
 
 func (h *LinkHandler) ListLinks(
 	c *gin.Context,
-){
+) {
 
 	page, _ :=
 		strconv.Atoi(
@@ -100,7 +84,6 @@ func (h *LinkHandler) ListLinks(
 			),
 		)
 
-
 	limit, _ :=
 		strconv.Atoi(
 			c.DefaultQuery(
@@ -109,8 +92,6 @@ func (h *LinkHandler) ListLinks(
 			),
 		)
 
-
-
 	links, err :=
 		h.service.ListLinks(
 			c.Request.Context(),
@@ -118,40 +99,40 @@ func (h *LinkHandler) ListLinks(
 			limit,
 		)
 
-
-
 	if err != nil {
 
 		c.JSON(
 			http.StatusInternalServerError,
-			gin.H{
-				"error":err.Error(),
+			dto.ErrorResponse{
+				Error: err.Error(),
 			},
 		)
 
 		return
 	}
 
+	response := dto.PaginationResponse{
 
+		Page: page,
+
+		Limit: limit,
+
+		Items: links,
+	}
 
 	c.JSON(
 		http.StatusOK,
-		gin.H{
-			"data":links,
-			"page":page,
-			"limit":limit,
-		},
+		response,
 	)
 
 }
 
 func (h *LinkHandler) Redirect(
 	c *gin.Context,
-){
+) {
 
 	code :=
 		c.Param("code")
-
 
 	link, err :=
 		h.service.FindByCode(
@@ -159,36 +140,28 @@ func (h *LinkHandler) Redirect(
 			code,
 		)
 
-
-
 	if err != nil || link == nil {
-
 
 		c.JSON(
 			404,
 			gin.H{
-				"error":"link not found",
+				"error": "link not found",
 			},
 		)
 
 		return
 	}
 
-
-
 	// Async click recording
 
-	go func(){
+	go func() {
 
 		worker.ClickChannel <- worker.ClickEvent{
 
 			LinkID: link.ID,
-
 		}
 
 	}()
-
-
 
 	c.Redirect(
 		302,
@@ -199,11 +172,10 @@ func (h *LinkHandler) Redirect(
 
 func (h *LinkHandler) Stats(
 	c *gin.Context,
-){
+) {
 
 	code :=
 		c.Param("code")
-
 
 	link, err :=
 		h.service.FindByCode(
@@ -211,42 +183,35 @@ func (h *LinkHandler) Stats(
 			code,
 		)
 
-
 	if err != nil || link == nil {
 
 		c.JSON(
 			http.StatusNotFound,
 			gin.H{
-				"error":"link not found",
+				"error": "link not found",
 			},
 		)
 
 		return
 	}
 
-
-
-	response,err :=
+	response, err :=
 		h.service.GetStats(
 			c.Request.Context(),
 			link.ID,
 		)
 
-
-
 	if err != nil {
 
 		c.JSON(
 			500,
-			gin.H{
-				"error":err.Error(),
+			dto.ErrorResponse{
+				Error: err.Error(),
 			},
 		)
 
 		return
 	}
-
-
 
 	c.JSON(
 		200,
@@ -254,4 +219,3 @@ func (h *LinkHandler) Stats(
 	)
 
 }
-

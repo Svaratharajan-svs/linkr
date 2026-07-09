@@ -2,14 +2,14 @@ package service
 
 import (
 	"context"
-	"time"
 	"github.com/google/uuid"
+	"time"
 
+	"github.com/Svaratharajan-svs/linkr/backend/config"
 	"github.com/Svaratharajan-svs/linkr/backend/dto"
 	"github.com/Svaratharajan-svs/linkr/backend/models"
 	"github.com/Svaratharajan-svs/linkr/backend/repository"
 	"github.com/Svaratharajan-svs/linkr/backend/utils"
-	"github.com/Svaratharajan-svs/linkr/backend/config"
 )
 
 type LinkService struct {
@@ -107,7 +107,7 @@ func (s *LinkService) CreateLink(
 		Code:        link.Code,
 		ShortURL:    s.cfg.BaseURL + "/" + link.Code,
 		OriginalURL: link.OriginalURL,
-		CreatedAt: link.CreatedAt.Format(time.RFC3339),
+		CreatedAt:   link.CreatedAt.Format(time.RFC3339),
 	}, nil
 }
 

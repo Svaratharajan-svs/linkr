@@ -3,7 +3,6 @@ package models
 import "time"
 
 type User struct {
-
 	ID string
 
 	Email string
@@ -11,5 +10,4 @@ type User struct {
 	Role string
 
 	CreatedAt time.Time
-
 }

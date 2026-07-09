@@ -3,12 +3,11 @@ package repository
 import (
 	"context"
 
-	"github.com/Svaratharajan-svs/linkr/backend/models"
 	"github.com/Svaratharajan-svs/linkr/backend/dto"
+	"github.com/Svaratharajan-svs/linkr/backend/models"
 )
 
 type LinkRepository interface {
-
 	Create(
 		ctx context.Context,
 		link *models.Link,
@@ -44,5 +43,4 @@ type LinkRepository interface {
 		ctx context.Context,
 		linkID string,
 	) (int, error)
-
 }
