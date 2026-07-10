@@ -21,7 +21,7 @@ export default function CreateLinkPage() {
 
             const result = await createLink(data);
 
-            toast.success(`Short URL created!\n\n${result.short_url}`);
+            toast.success(`Short URL created!`);
 
             router.push("/dashboard");
         } catch (err: any) {

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Copy, Check, ExternalLink, MousePointerClick, BarChart3} from "lucide-react";
+import { useRouter } from "next/dist/client/components/navigation";
 import { Link } from "@/types/link";
-import { Copy, Check, ExternalLink, MousePointerClick } from "lucide-react";
 
 interface Props {
   links: Link[];
@@ -13,7 +14,7 @@ const BASE_URL =
 
 export default function LinkTable({ links }: Props) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
-
+    const router = useRouter();
   function copyLink(code: string) {
     navigator.clipboard.writeText(`${BASE_URL}/${code}`);
     setCopiedCode(code);
@@ -105,30 +106,40 @@ export default function LinkTable({ links }: Props) {
               </td>
 
               {/* Actions — centered */}
-              <td className="px-6 py-4">
-                <div className="flex items-center justify-center">
-                  <button
-                    onClick={() => copyLink(link.code)}
-                    className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
-                      copiedCode === link.code
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-600"
-                        : "border-gray-200 text-gray-600 opacity-0 group-hover:opacity-100 hover:bg-white hover:text-indigo-600 hover:shadow-sm"
-                    }`}
-                  >
-                    {copiedCode === link.code ? (
-                      <>
-                        <Check className="h-3.5 w-3.5" />
-                        Copied
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-3.5 w-3.5" />
-                        Copy
-                      </>
-                    )}
-                  </button>
-                </div>
-              </td>
+                  <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                          {/* Copy button */}
+                          <button
+                              onClick={() => copyLink(link.code)}
+                              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium shadow-sm transition-all ${copiedCode === link.code
+                                      ? "border-emerald-200 bg-emerald-50 text-emerald-600"
+                                      : "border-gray-200 bg-white text-gray-600 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 hover:shadow"
+                                  }`}
+                          >
+                              {copiedCode === link.code ? (
+                                  <>
+                                      <Check className="h-3.5 w-3.5" />
+                                      Copied
+                                  </>
+                              ) : (
+                                  <>
+                                      <Copy className="h-3.5 w-3.5" />
+                                      Copy
+                                  </>
+                              )}
+                          </button>
+
+                          {/* Stats button */}
+                          <button
+                              type="button"
+                              onClick={() => router.push(`/dashboard/stats/${link.code}`)}
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 shadow-sm transition-all hover:border-indigo-300 hover:bg-indigo-100 hover:shadow"
+                          >
+                              <BarChart3 className="h-3.5 w-3.5" />
+                              Stats
+                          </button>
+                      </div>
+                  </td>
             </tr>
           ))}
         </tbody>

@@ -1,84 +1,43 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-import {
-    useEffect
-} from "react";
-
-
-import {
-    useRouter
-} from "next/navigation";
-
-
-import {
-    useAuth
-} from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import Loading from "./Loading";
 
+export default function ProtectedRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { isAuthenticated, loading } = useAuth();
 
+  const router = useRouter();
 
-export default function ProtectedRoute(
-    {
-        children
-    }: {
-        children: React.ReactNode
-    }) {
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    const {
-        isAuthenticated,
-        loading
+  useEffect(() => {
+    if (mounted && !loading && !isAuthenticated) {
+      router.replace("/login");
     }
-        =
-        useAuth();
+  }, [mounted, loading, isAuthenticated, router]);
 
+  if (!mounted) {
+    return <Loading />;
+  }
 
-console.log("ProtectedRoute: isAuthenticated =", isAuthenticated, "loading =", loading);
-    const router =
-        useRouter();
+  if (loading) {
+    return <Loading />;
+  }
 
+  if (!isAuthenticated) {
+    return null;
+  }
 
-
-    useEffect(() => {
-
-
-        if (!loading && !isAuthenticated) {
-
-            router.push("/login");
-
-        }
-
-
-    }, [
-        loading,
-        isAuthenticated,
-        router
-    ]);
-
-
-
-
-    if (loading) {
-
-        return (
-
-            <Loading />
-
-        );
-
-    }
-
-
-
-    if (!isAuthenticated) {
-
-        return null;
-
-    }
-
-
-
-    return <>{children}</>;
-
+  return children;
 }

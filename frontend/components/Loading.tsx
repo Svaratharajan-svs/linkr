@@ -27,20 +27,6 @@ export default function Loading() {
       <div className="h-1 w-48 overflow-hidden rounded-full bg-slate-800">
         <div className="h-full w-1/3 animate-[loading_1.4s_ease-in-out_infinite] rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500"></div>
       </div>
-
-      <style jsx global>{`
-        @keyframes loading {
-          0% {
-            transform: translateX(-100%);
-          }
-          50% {
-            transform: translateX(150%);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-      `}</style>
     </div>
   );
 }

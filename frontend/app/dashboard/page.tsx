@@ -161,8 +161,8 @@ export default function Dashboard() {
             <StatCard
               icon={<MousePointerClick className="h-5 w-5 text-emerald-600" />}
               iconBg="bg-emerald-50"
-              label="Total clicks"
-              value={totalClicks.toLocaleString()}
+              label="Total Links"
+              value={totalLinks.toLocaleString()}
             />
             <StatCard
               icon={<TrendingUp className="h-5 w-5 text-amber-600" />}
