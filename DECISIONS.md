@@ -109,3 +109,28 @@ Amazon Cognito provides a highly scalable and secure authentication service with
 | Queue    | Kafka/SQS for click events                   |
 
 ---
+
+# AI Usage
+
+AI tools were used to improve development efficiency for the following tasks:
+
+- Boilerplate code generation
+- Test case suggestions
+- Documentation drafting
+
+## Engineering Decisions
+
+All architecture and engineering decisions were made manually.
+
+Examples of decisions made independently include:
+
+- Database design
+- Authentication architecture (Amazon Cognito vs. custom authentication)
+- Infrastructure design
+- API design
+- Application architecture
+- Technology selection
+- Security design
+- Deployment strategy
+
+AI was used as a productivity assistant, not as a decision-maker. I designed the system architecture, evaluated technical trade-offs, and made all key engineering decisions. AI was only used to generate boilerplate code, suggest test cases, and assist with documentation based on my design and implementation.
