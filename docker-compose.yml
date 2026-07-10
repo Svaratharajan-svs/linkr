@@ -139,6 +139,84 @@ services:
 
       - backend
 
+  postgres-test:
+
+    image: postgres:16
+
+    container_name: linkr-postgres-test
+
+    environment:
+
+      POSTGRES_USER: postgres
+
+      POSTGRES_PASSWORD: postgres
+
+      POSTGRES_DB: linkr_test
+
+
+    ports:
+
+      - "5433:5432"
+
+
+    volumes:
+
+      - ./db/test-init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+    healthcheck:
+
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres"
+        ]
+
+      interval: 5s
+
+      timeout: 5s
+
+      retries: 10
+  backend-test:
+
+    build:
+
+      context: ./backend
+
+      dockerfile: Dockerfile.test
+
+
+    container_name: linkr-backend-test
+
+
+    working_dir: /app
+
+
+    volumes:
+
+      - ./backend:/app
+
+
+    environment:
+
+      TEST_DATABASE_URL:
+        postgres://postgres:postgres@postgres-test:5432/linkr_test?sslmode=disable
+
+
+      CGO_ENABLED:
+        1
+
+
+    depends_on:
+
+      postgres-test:
+
+        condition: service_healthy
+
+
+    command:
+
+      tail -f /dev/null
 
 
 volumes:

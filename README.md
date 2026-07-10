@@ -21,7 +21,7 @@
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/Svaratharajan-svs/linkr.git
+git clone <repo>
 cd linkr
 ```
 
@@ -70,20 +70,27 @@ docker compose up
 
 ### Test Credentials
 
-| Field    | Value                     |
-|----------|---------------------------|
-| Username |svaratharajan4545@gmail.com|
-| Password |Linkr*@admin45             |
+| Field    | Value    |
+|----------|----------|
+| Username |          |
+| Password |          |
 
-### Run Backend Tests
+### Backend Tests
+
+**Start Test Environment**
 
 ```bash
-cd backend
-go test ./...
+docker compose up -d postgres-test backend-test
 ```
 
-### Run with Race Detector
+**Run Tests**
 
 ```bash
-go test -race ./...
+docker compose exec backend-test go test ./...
+```
+
+**Run with Race Detector**
+
+```bash
+docker compose exec backend-test go test -race ./...
 ```

@@ -24,7 +24,7 @@ func SetupDatabase(){
 	if url == "" {
 
 		url =
-		"postgres://postgres:postgres@localhost:5432/linkr_test?sslmode=disable"
+		"postgres://postgres:postgres@localhost:5433/linkr_test?sslmode=disable"
 
 	}
 
