@@ -1,73 +1,99 @@
 import {
     CognitoUser,
     AuthenticationDetails
-}
-from "amazon-cognito-identity-js";
+} from "amazon-cognito-identity-js";
 
 
-import {getUserPool}
-from "@/lib/cognito";
+import {
+    getUserPool
+} from "@/lib/cognito";
+
+
+import {
+    saveToken,
+    removeToken
+} from "@/utils/storage";
+
 
 
 export function login(
-    email:string,
+    username:string,
     password:string
-){
-
-return new Promise((resolve,reject)=>{
+):Promise<string>{
 
 
-const user =
-new CognitoUser({
-
-Username:email,
-
-Pool:getUserPool()
-
-});
+    return new Promise(
+        (resolve,reject)=>{
 
 
-const details =
-new AuthenticationDetails({
+            const user =
+                new CognitoUser({
 
-Username:email,
+                    Username:username,
 
-Password:password
+                    Pool:getUserPool()
 
-});
-
-
-user.authenticateUser(details,{
-
-onSuccess(session){
+                });
 
 
-const token =
-session.getAccessToken()
-.getJwtToken();
+
+            const authDetails =
+                new AuthenticationDetails({
+
+                    Username:username,
+
+                    Password:password
+
+                });
 
 
-localStorage.setItem(
-"token",
-token
-);
+
+            user.authenticateUser(
+                authDetails,
+                {
 
 
-resolve(token);
+                    onSuccess:
+                    (session)=>{
 
-},
+
+                        const token =
+                            session
+                            .getAccessToken()
+                            .getJwtToken();
 
 
-onFailure(error){
 
-reject(error);
+                        saveToken(token);
+
+
+                        resolve(token);
+
+                    },
+
+
+                    onFailure:
+                    (error)=>{
+
+
+                        reject(error);
+
+                    }
+
+
+                }
+            );
+
+
+        }
+    );
 
 }
 
-});
 
 
-});
+export function logout(){
 
+    removeToken();
 
 }

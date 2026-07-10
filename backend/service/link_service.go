@@ -110,20 +110,30 @@ func (s *LinkService) CreateLink(
 		CreatedAt:   link.CreatedAt.Format(time.RFC3339),
 	}, nil
 }
-
 func (s *LinkService) ListLinks(
-	ctx context.Context,
-	page int,
-	limit int,
-) ([]models.Link, error) {
+    ctx context.Context,
+    page int,
+    limit int,
+) ([]models.Link, int, error) {
 
-	offset := (page - 1) * limit
+    offset := (page - 1) * limit
 
-	return s.repository.List(
-		ctx,
-		limit,
-		offset,
-	)
+    links, err := s.repository.List(
+        ctx,
+        limit,
+        offset,
+    )
+
+    if err != nil {
+        return nil, 0, err
+    }
+
+    total, err := s.repository.Count(ctx)
+    if err != nil {
+        return nil, 0, err
+    }
+
+    return links, total, nil
 }
 
 func (s *LinkService) FindByCode(

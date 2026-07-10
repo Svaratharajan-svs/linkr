@@ -291,3 +291,23 @@ func (r *PostgresLinkRepository) GetDailyStats(
 
 	return stats, rows.Err()
 }
+
+
+func (r *PostgresLinkRepository) Count(
+    ctx context.Context,
+) (int, error) {
+
+    query := `
+    SELECT COUNT(*)
+    FROM links
+    `
+
+    var total int
+
+    err := r.db.QueryRow(
+        ctx,
+        query,
+    ).Scan(&total)
+
+    return total, err
+}

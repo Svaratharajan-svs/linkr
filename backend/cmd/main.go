@@ -20,6 +20,7 @@ import (
 	"github.com/Svaratharajan-svs/linkr/backend/routes"
 	"github.com/Svaratharajan-svs/linkr/backend/service"
 	"github.com/Svaratharajan-svs/linkr/backend/worker"
+	"github.com/gin-contrib/cors"
 )
 
 func main() {
@@ -61,6 +62,35 @@ func main() {
 
 	// Create Gin router
 	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{
+			"http://localhost:3000",
+			"http://localhost:3001",
+		},
+
+		AllowMethods: []string{
+			"GET",
+			"POST",
+			"PUT",
+			"DELETE",
+			"OPTIONS",
+		},
+
+		AllowHeaders: []string{
+			"Origin",
+			"Content-Type",
+			"Authorization",
+		},
+
+		ExposeHeaders: []string{
+			"Content-Length",
+		},
+
+		AllowCredentials: true,
+
+		MaxAge: 12 * time.Hour,
+	}))
+
 
 	// Health handler
 	healthHandler :=

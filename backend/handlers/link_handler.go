@@ -92,7 +92,7 @@ func (h *LinkHandler) ListLinks(
 			),
 		)
 
-	links, err :=
+	links,total, err :=
 		h.service.ListLinks(
 			c.Request.Context(),
 			page,
@@ -118,6 +118,7 @@ func (h *LinkHandler) ListLinks(
 		Limit: limit,
 
 		Items: links,
+		Total: total,
 	}
 
 	c.JSON(

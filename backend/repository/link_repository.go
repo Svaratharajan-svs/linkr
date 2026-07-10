@@ -43,4 +43,7 @@ type LinkRepository interface {
 		ctx context.Context,
 		linkID string,
 	) (int, error)
+	Count(
+    ctx context.Context,
+) (int, error)
 }
