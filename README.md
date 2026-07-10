@@ -70,10 +70,10 @@ docker compose up
 
 ### Test Credentials
 
-| Field    | Value    |
-|----------|----------|
-| Username |          |
-| Password |          |
+| Field    | Value                      |
+|----------|----------------------------|
+| Username |svaratharajan4545@gmail.com |
+| Password |Linkr*@admin45              |
 
 ### Backend Tests
 
