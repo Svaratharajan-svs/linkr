@@ -83,16 +83,14 @@ Redirect lookup is frequent. Statistics require date filtering.
 
 AWS Cognito JWT verification.
 
+**Tradeoff**
+Use Amazon Cognito instead of a custom authentication implementation.
+
 **Reason**
-
-Avoid implementing password management. Cognito provides:
-- Token issuing
-- User management
-- Security features
-
+Amazon Cognito provides a highly scalable and secure authentication service with built-in support for user management, JWT token issuance, MFA, password policies, and social identity providers. Although it incurs additional cost compared to a self-managed solution, it significantly reduces development effort, maintenance, and security risks, making it a better choice for production-grade applications.
 ---
 
-## 5. Scaling Strategy
+## 5. Future Scaling Strategy
 
 **Current**
 - Stateless Go API

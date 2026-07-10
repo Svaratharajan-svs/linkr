@@ -21,7 +21,7 @@
 ### Clone the Repository
 
 ```bash
-git clone <repo>
+git clone https://github.com/Svaratharajan-svs/linkr.git
 cd linkr
 ```
 

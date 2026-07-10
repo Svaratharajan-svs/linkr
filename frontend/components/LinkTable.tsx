@@ -40,9 +40,6 @@ export default function LinkTable({ links }: Props) {
             <th className="px-6 py-3 text-left font-medium text-gray-500">
               Original URL
             </th>
-            <th className="px-6 py-3 text-right font-medium text-gray-500">
-              Clicks
-            </th>
             <th className="px-6 py-3 text-left font-medium text-gray-500">
               Created
             </th>
@@ -91,15 +88,7 @@ export default function LinkTable({ links }: Props) {
                   {link.original_url}
                 </p>
               </td>
-
-              {/* Clicks — right aligned, numeric */}
-              <td className="px-6 py-4 text-right">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">
-                  <MousePointerClick className="h-3 w-3" />
-                  {(link.clicks ?? 0).toLocaleString()}
-                </span>
-              </td>
-
+                
               {/* Created date */}
               <td className="whitespace-nowrap px-6 py-4 text-gray-500">
                 {formatDate(link.created_at)}
