@@ -14,7 +14,9 @@ type AliasExistsRepo struct {
 }
 func TestCreateLinkSuccess(t *testing.T) {
 
-	repo := &repository.MockRepository{}
+	repo := &repository.MockRepository{
+		CodeExists:false,
+	}
 
 	cfg := &config.Config{
 		BaseURL: "http://localhost:8080",
@@ -89,13 +91,11 @@ func TestCreateLinkSuccess(t *testing.T) {
 func (m *AliasExistsRepo) FindByAlias(
 	ctx context.Context,
 	alias string,
-) (*models.Link, error) {
+) (*models.Link,error){
 
 	return &models.Link{
-
-		Code: alias,
-
-	}, nil
+		Code:alias,
+	},nil
 }
 
 func TestAliasAlreadyExists(t *testing.T) {

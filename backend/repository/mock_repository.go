@@ -11,8 +11,11 @@ type MockRepository struct {
 	CreateCalled bool
 
 	Created *models.Link
+
 	CountValue int
 	CountError error
+
+	CodeExists bool   // add this
 }
 
 func (m *MockRepository) Create(
@@ -30,11 +33,20 @@ func (m *MockRepository) Create(
 func (m *MockRepository) FindByCode(
 	ctx context.Context,
 	code string,
-) (*models.Link, error) {
+) (*models.Link,error){
 
-	return nil, nil
+	if m.CodeExists {
+
+		return &models.Link{
+			ID: "test-link-id",
+			Code: code,
+			OriginalURL: "https://google.com",
+		}, nil
+
+	}
+
+	return nil,nil
 }
-
 func (m *MockRepository) FindByAlias(
 	ctx context.Context,
 	alias string,
