@@ -2,32 +2,39 @@ package utils
 
 import "testing"
 
-func TestAliasValidation(t *testing.T) {
+func TestIsValidAlias(t *testing.T) {
 
-	valid := []string{
-		"hello",
-		"my-link",
-		"user_1",
+	tests := []struct {
+		alias string
+		valid bool
+	}{
+		{"google", true},
+		{"google123", true},
+		{"abc-123", true},
+		{"abc_def", true},
+
+		{"", false},
+		{"ab", false},
+		{"@", false},
+		{"hello world", false},
+		{"abc$", false},
 	}
 
-	for _, alias := range valid {
+	for _, tt := range tests {
 
-		if !IsValidAlias(alias) {
-			t.Errorf("%s should be valid", alias)
+		got := IsValidAlias(tt.alias)
+
+		if got != tt.valid {
+
+			t.Fatalf(
+				"%s expected %v got %v",
+				tt.alias,
+				tt.valid,
+				got,
+			)
+
 		}
+
 	}
 
-	invalid := []string{
-		"",
-		"a",
-		"hello world",
-		"###",
-	}
-
-	for _, alias := range invalid {
-
-		if IsValidAlias(alias) {
-			t.Errorf("%s should be invalid", alias)
-		}
-	}
 }

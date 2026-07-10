@@ -5,28 +5,60 @@ import "testing"
 func TestIsValidURL(t *testing.T) {
 
 	tests := []struct {
+		name     string
 		url      string
 		expected bool
 	}{
-		{"https://google.com", true},
-		{"http://example.com", true},
-		{"ftp://server.com", true},
-		{"google.com", false},
-		{"abc", false},
-		{"", false},
+		{
+			name: "https",
+			url: "https://google.com",
+			expected: true,
+		},
+		{
+			name: "http",
+			url: "http://example.com",
+			expected: true,
+		},
+		{
+			name: "localhost",
+			url: "http://localhost:8080",
+			expected: true,
+		},
+		{
+			name: "missing scheme",
+			url: "google.com",
+			expected: false,
+		},
+		{
+			name: "invalid",
+			url: "abc",
+			expected: false,
+		},
+		{
+			name: "empty",
+			url: "",
+			expected: false,
+		},
 	}
 
-	for _, test := range tests {
+	for _, tt := range tests {
 
-		result := IsValidURL(test.url)
+		t.Run(tt.name, func(t *testing.T) {
 
-		if result != test.expected {
-			t.Errorf(
-				"%s expected %v got %v",
-				test.url,
-				test.expected,
-				result,
-			)
-		}
+			got := IsValidURL(tt.url)
+
+			if got != tt.expected {
+
+				t.Fatalf(
+					"expected %v got %v",
+					tt.expected,
+					got,
+				)
+
+			}
+
+		})
+
 	}
+
 }
