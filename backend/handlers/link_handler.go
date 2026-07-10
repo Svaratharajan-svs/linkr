@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/Svaratharajan-svs/linkr/backend/dto"
+	"github.com/Svaratharajan-svs/linkr/backend/models"
 	"github.com/Svaratharajan-svs/linkr/backend/service"
 	"github.com/Svaratharajan-svs/linkr/backend/worker"
 )
@@ -111,6 +112,10 @@ func (h *LinkHandler) ListLinks(
 		return
 	}
 
+		// Convert nil slice to empty array
+	if links == nil {
+    links = make([]models.Link, 0)
+}
 	response := dto.PaginationResponse{
 
 		Page: page,

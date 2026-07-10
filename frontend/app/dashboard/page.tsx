@@ -43,7 +43,7 @@ export default function Dashboard() {
       setLoading(true);
       setError("");
       const result = await getLinks(page, 10);
-      setLinks(result.items);
+      setLinks(result.items ?? []);
       setTotalLinks(result.total ?? 0);
     } catch (err) {
       setError("Failed to load links. Please try again.");
@@ -72,8 +72,6 @@ export default function Dashboard() {
     logout();
     router.push("/login");
   }
-
-  const totalClicks = links.reduce((sum, l) => sum + (l.clicks || 0), 0);
   const displayName = user?.name || user?.email?.split("@")[0] || "Account";
   const initial = displayName.charAt(0).toUpperCase();
 

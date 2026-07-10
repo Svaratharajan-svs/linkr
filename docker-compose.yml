@@ -2,81 +2,145 @@ services:
 
   postgres:
 
-    image: postgres:17
+    image: postgres:16
 
-    container_name: postgres
-
-    restart: always
+    container_name: linkr-postgres
 
     environment:
-
-      POSTGRES_DB: linkr
 
       POSTGRES_USER: postgres
 
       POSTGRES_PASSWORD: postgres
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d linkr"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+
+      POSTGRES_DB: linkr
+
 
     ports:
 
       - "5432:5432"
 
+
     volumes:
 
-      - postgres_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
 
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    
+
+
+
+    healthcheck:
+
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres"
+        ]
+
+      interval: 5s
+
+      timeout: 5s
+
+      retries: 10
+
+
 
   backend:
 
-    build: ./backend
+    build:
 
-    container_name: backend
+      context: ./backend
+
+
+    container_name: linkr-backend
+
+
+    environment:
+
+
+      PORT: 8080
+
+
+      DATABASE_URL:
+        postgres://postgres:postgres@postgres:5432/linkr?sslmode=disable
+
+
+      BASE_URL:
+        http://localhost:8080
+
+
+      COGNITO_POOL_ID:
+        ${COGNITO_POOL_ID}
+
+
+      COGNITO_CLIENT_ID:
+        ${COGNITO_CLIENT_ID}
+
+
+      COGNITO_REGION:
+        ${COGNITO_REGION}
+
+
 
     ports:
 
       - "8080:8080"
 
-    env_file:
 
-      - ./backend/.env
 
     depends_on:
+
       postgres:
+
         condition: service_healthy
+
+
 
   frontend:
 
-    build: 
+
+    build:
+
       context: ./frontend
-      args:
-        NEXT_PUBLIC_API: http://localhost:8080
 
-        NEXT_PUBLIC_REGION: ap-south-1
 
-        NEXT_PUBLIC_POOL_ID: ap-south-1_VofpQSNp2
 
-        NEXT_PUBLIC_CLIENT_ID: 6p91k8ssnakkc4taq9mtd4th9k
+    container_name: linkr-frontend
 
-    container_name: frontend
+
+
+    environment:
+
+
+      NEXT_PUBLIC_API:
+
+        http://localhost:8080
+
+
+
+      NEXT_PUBLIC_POOL_ID:
+
+        ${COGNITO_POOL_ID}
+
+
+
+      NEXT_PUBLIC_CLIENT_ID:
+
+        ${COGNITO_CLIENT_ID}
+
+
 
     ports:
 
       - "3000:3000"
 
-    env_file:
 
-      - ./frontend/.env.local
 
     depends_on:
 
       - backend
 
+
+
 volumes:
 
-  postgres_data:
+  postgres-data:
