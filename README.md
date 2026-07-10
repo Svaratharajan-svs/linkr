@@ -68,6 +68,13 @@ docker compose up
 
 ## Testing
 
+### Test Credentials
+
+| Field    | Value                     |
+|----------|---------------------------|
+| Username |svaratharajan4545@gmail.com|
+| Password |Linkr*@admin45             |
+
 ### Run Backend Tests
 
 ```bash
